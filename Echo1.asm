@@ -18,6 +18,6 @@ main PROC
 	invoke StdIn, offset buf, 32 ; Get user input max 32 bytes
 	invoke StdOut, offset buf ; Print to stdout
 
-	ret ; exit
+	invoke ExitProcess, 0
 main ENDP
 end main
