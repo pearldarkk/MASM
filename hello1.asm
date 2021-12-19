@@ -1,17 +1,25 @@
+.386
+.model flat, stdcall
 option casemap: none
 
-extern GetStdHandle: proc
+include \masm32\include\kernel32.inc
+include \masm32\include\masm32.inc
 
-.data
-	cap		db	'Message', 0
-	msg		db	'Hello World', 0Ah, 0
+includelib \masm32\lib\kernel32.lib
+includelib \masm32\lib\masm32.lib
+
+.data?
+	buf db 32 dup(?) ; reserve 32 bytes
 
 .code
-PUBLIC main
 main PROC
-	mov		rcx, -11
-	call	GetStdHandle
-	ret
+	push    32
+    push    offset buf
+    call    StdIn
 
+    push    offset buf
+    call    StdOut
+
+    ret
 main ENDP
-end
+end main

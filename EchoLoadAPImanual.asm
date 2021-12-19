@@ -4,31 +4,45 @@ option casemap: none
 .code
 main proc
     mov     ebp, esp
-    sub     esp, 8
+    sub     esp, 0ch
     call    abc
-    db      'Hello, World!', 0
+    db      32  dup('1')          ; assume buf
 
     abc:
-    pop     ebx                 ; ebx = &sHello
+    pop     ebx                 ; ebx = &buf
     call    findkernel32
     mov     [ebp - 4], eax      ; local [ebp-4] = kernel32 base address
     
     push    7487d823h           ; GetStdHandle hash value
     push    [ebp - 4]
     call    findSymbol          ; find function GetStdHandle
-    push    -11                 ; STD_OUTPUT_HANDLE
-    call    eax              
-    mov     [ebp - 8], eax      ; hConsoleOutput
 
-    push    88d2f963h           ; WriteConsoleA hash value
+    push    eax
+    push    -10                 ; STD_INPUT_HANDLE
+    call    eax              
+    mov     [ebp - 8], eax      ; hConsoleInput
+    pop     eax
+    push    -11
+    call    eax
+    mov     [ebp - 0ch], eax    ; hConsoleOutput
+
+    push    10fa6516h           ; ReadFile hash value
     push    [ebp - 4]           
     call    findSymbol          
 
-    push    0
-    push    13
+    push    32
     push    ebx
     push    [ebp - 8]
-    call    eax                 ; WriteConsoleA(hConsoleOutput, &sHello, sizeof sHello, NULL)
+    call    eax                 ; ReadFile(hConsoleInput, &buf, 32)
+
+    push    0e80a791fh           ; WriteFile hash value
+    push    [ebp - 4]           
+    call    findSymbol          
+
+    push    32
+    push    ebx
+    push    [ebp - 0ch]
+    call    eax                 ; WriteFile(hConsoleOutput, &buf, sizeof buf)
 
     push    73e2d87eh           ; ExitProcess hash value
     push    [ebp - 4]
