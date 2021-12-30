@@ -32,7 +32,6 @@ toUpper PROC
     push    ebp 
     mov     ebp, esp
     push    esi
-    push    edi
     mov     esi, [ebp + 8]
     mov     edi, [ebp + 8]
 
@@ -40,16 +39,22 @@ toUpper PROC
     cld                             ; set df = 0 to set loop direction
 
     iter:
-    lodsb                           ; al = byte ptr [esi]++ 
+    mov     al, byte ptr [esi]      ; al = byte ptr [esi]++ 
+    inc     esi
     cmp     al, ah
     jz      done
-    and     al, 0dfh                 
-    stosb                           ; byte ptr [edi]++ = al
+    cmp     al, 'a'
+    jl      iter
+    cmp     al, 'z'
+    jg      iter
+    xor     al, 20h
+    dec     esi
+    mov     byte ptr [esi], al
+    inc     esi
     jmp     iter                    ; if uppercase continue
 
     done:
     mov     eax, [ebp + 8]
-    pop     edi
     pop     esi
     mov     esp, ebp
     pop     ebp
