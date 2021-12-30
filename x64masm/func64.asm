@@ -1,3 +1,4 @@
+; stores functions used frequently
 atoi proc   ; ascii to int, return in eax
     push    rbp
     mov     rbp, rsp

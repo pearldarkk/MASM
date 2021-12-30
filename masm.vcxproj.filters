@@ -3,4 +3,7 @@
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="x64masm\func64.asm" />
+  </ItemGroup>
 </Project>
