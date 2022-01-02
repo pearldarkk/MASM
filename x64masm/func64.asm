@@ -1,41 +1,78 @@
 ; stores functions used frequently
-atoi proc   ; ascii to int, return in eax
+atoi proc                   ; ascii to int
     push    rbp
     mov     rbp, rsp
     sub     rsp, 8
     push    rsi
+    push    rbx
     mov     [rbp - 8], rcx     
     mov     rsi, rcx
+    xor     ecx, ecx
     xor     eax, eax
     mov     ebx, 10
     
     iter:
     mul     ebx
-    mov     dl, byte ptr [rsi]
+    mov     cl, byte ptr [rsi]
     inc     rsi
-    cmp     dl, 0dh
-    jz      done
-    and     dl, 0fh
-    add     eax, edx
+    cmp     cl, '0'
+    js      done
+    cmp     cl, '9'
+    jg      done
+    and     cl, 0fh
+    add     eax, ecx
     jmp     iter
 
     done:
-    xor     edx, edx    
     div     ebx
+    pop     rbx
     pop     rsi
     mov     rsp, rbp
     pop     rbp    
     ret  
 atoi endp
 
-itoa proc   ; int to ascii, return szArr in rcx, pointer in rax
+atol proc                   ; ascii to ull
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 8
+    push    rsi
+    push    rbx
+    mov     [rbp - 8], rcx     
+    mov     rsi, rcx
+    xor     rcx, rcx
+    xor     rax, rax
+    mov     rbx, 10
+    
+    iter:
+    mul     rbx
+    mov     cl, byte ptr [rsi]
+    inc     rsi
+    cmp     cl, '0'
+    js      done
+    cmp     cl, '9'
+    jns     done
+    and     cl, 0fh
+    add     rax, rcx
+    jmp     iter
+
+    done:
+    div     rbx
+    pop     rbx
+    pop     rsi
+    mov     rsp, rbp
+    pop     rbp    
+    ret  
+atol endp
+
+itoa proc   ; int to ascii, return strlen in rcx, pointer in rax
     push    rbp    
     mov     rbp, rsp
     push    rsi
     push    rcx
     
     ; dynamic memory allocation to make room to create string
-    sub     rsp, 20h            ; shadow space + align
+    sub     rsp, 20h            ; shadow space 
     call    GetProcessHeap
     mov     rcx, rax
     mov     rdx, 8
@@ -68,6 +105,47 @@ itoa proc   ; int to ascii, return szArr in rcx, pointer in rax
     pop     rbp
     ret   
 itoa endp
+
+ltoa proc   ; long long (64bit integer) to ascii, return strlen in rcx, pointer in rax
+    push    rbp    
+    mov     rbp, rsp
+    push    rsi
+    push    rcx
+    
+    ; dynamic memory allocation to make room to create string
+    sub     rsp, 20h            ; shadow space 
+    call    GetProcessHeap
+    mov     rcx, rax
+    mov     rdx, 8
+    mov     r8, 22
+    call    HeapAlloc           ; HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 10) 
+    add     rsp, 20h
+    mov     rdi, rax            
+    add     rdi, 20              ; rdi = *(str + 20)
+    pop     rax                 ; pop int to rax
+    mov     r10, rdi            ; save rdi
+    mov     r8, 10
+    
+    iter:
+    xor     rdx, rdx
+    div     r8
+    or      dl, 30h
+    mov     byte ptr [rdi], dl
+    dec     rdi
+    test    rax, rax
+    jz      done
+    jmp     iter
+
+    done:
+    sub     r10, rdi
+    mov     rcx, r10
+    inc     rdi
+    mov     rax, rdi
+    pop     rsi
+    mov     rsp, rbp
+    pop     rbp
+    ret   
+ltoa endp
 
 pos proc    ; pos(substr, str, i) return in eax first position of substring substr in source string str from index i, if fail return -1
     push    rbp
