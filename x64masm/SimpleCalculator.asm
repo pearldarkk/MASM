@@ -132,7 +132,7 @@ main proc
     mov     rcx, result
     call    ltoa            
     test    negResult, 1
-    jnz     addNegative
+    jnz     addSign
     continue:
     mov     r8w, 0a0dh          ; little-endian
     mov     word ptr [rax + rcx], r8w 
@@ -170,7 +170,7 @@ main proc
     call    WriteFile
     jmp     startCalculating    ; new loop
 
-    addNegative:
+    addSign:
     dec     rax
     mov     byte ptr [rax], '-'
     inc     rcx
