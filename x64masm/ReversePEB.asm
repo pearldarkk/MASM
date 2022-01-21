@@ -148,7 +148,7 @@ findSymbol proc
     mov     eax, [rbx + 3ch]                    ; PE signature offset
     add     rax, rbx                            ; rva -> va
     ; pe32 parsing
-    mov     edx, [rax + 88h]              ; pe offset + OptionalHeader + data directory
+    mov     edx, [rax + 88h]                    ; pe offset + OptionalHeader + data directory
     add     rdx, [rbp - 8]                      ; edx = &IMAGE_EXPORT_DIRECTORY
     mov     ecx, [rdx + 18h]                    ; ecx = NumberOfNames
     mov     ebx, [rdx + 20h]                    ; ebx = AddressOfNames

@@ -2,10 +2,13 @@
 .model flat, stdcall
 option casemap: none
 
-include \masm32\include\kernel32.inc
-include \masm32\include\user32.inc
-includelib \masm32\lib\kernel32.lib
-includelib \masm32\lib\user32.lib
+include C:\masm32\include\windows.inc
+include C:\masm32\include\kernel32.inc
+include C:\masm32\include\msvcrt.inc
+include C:\masm32\include\comdlg32.inc
+includelib C:\masm32\lib\msvcrt.lib
+includelib C:\masm32\lib\kernel32.lib
+includelib C:\masm32\lib\comdlg32.lib
 
 .data
 	NL								db		0Ah, 0
