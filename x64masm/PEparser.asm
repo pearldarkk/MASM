@@ -1151,6 +1151,11 @@ main proc
 
 
     finished:                       ; done parsing
+    call    GetProcessHeap
+    mov     rcx, rax
+    mov     rdx, 1
+    mov     r8, lpFileData
+    call    HeapFree                ; free memory allocated before
     mov     ecx, 0
     call    ExitProcess
 
