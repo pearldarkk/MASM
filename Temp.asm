@@ -1,17 +1,8 @@
-.386
-.model flat, stdcall
-option casemap: none
-.stack 4096
-include C:\masm32\include\kernel32.inc
-include C:\masm32\include\masm32.inc
-
-includelib C:\masm32\lib\kernel32.lib
-includelib C:\masm32\lib\masm32.lib
-
-.data?
-
+.data
+sProgramHeaderTable db  "Type", 9, "Offset", 9, "VirtAddr", 9, "PhysAddr", 9, "FileSiz", 9, "MemSiz", 9, "Flags", 9, "Align", 0ah, 0
 .code
-main PROC
-
-main ENDP
-end main
+main proc
+    mov     rax, sizeof sProgramHeaderTable
+    mov     rbx, 0
+main endp
+end
